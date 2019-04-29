@@ -10,7 +10,9 @@ import { IUser } from '../../interfaces/IUser';
  */
 const attachCurrentUser = async (req, res, next) => {
   try {
-    const UserModel = Container.get('userModel') as mongoose.Model<IUser & mongoose.Document>;
+    const UserModel = Container.get('userModel') as mongoose.Model<
+      IUser & mongoose.Document
+    >;
     const userRecord = await UserModel.findById(req.token._id);
     if (!userRecord) {
       return res.sendStatus(401);
@@ -20,7 +22,7 @@ const attachCurrentUser = async (req, res, next) => {
     Reflect.deleteProperty(currentUser, 'salt');
     req.currentUser = currentUser;
     return next();
-  } catch(e) {
+  } catch (e) {
     console.log('🔥 Error attaching user to req');
     console.log(e);
     return next(e);

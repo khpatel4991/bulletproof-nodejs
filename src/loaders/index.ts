@@ -3,7 +3,7 @@ import dependencyInjectorLoader from './dependencyInjector';
 import mongooseLoader from './mongoose';
 import jobsLoader from './jobs';
 
-export default async ({ expressApp }) => {
+export default async ({ expressApp }, fapp) => {
   const mongoConnection = await mongooseLoader();
   console.log('✌️ DB loaded and connected!');
 
@@ -17,8 +17,8 @@ export default async ({ expressApp }) => {
 
   const userModel = {
     name: 'userModel',
-    // Notice the require syntax and the '.default' 
-    model: require('../models/user').default
+    // Notice the require syntax and the '.default'
+    model: require('../models/user').default,
   };
 
   // It returns the agenda instance because it's needed in the subsequent loaders
@@ -28,14 +28,13 @@ export default async ({ expressApp }) => {
       userModel,
       // salaryModel,
       // whateverModel
-    ]
+    ],
   });
   console.log('✌️ Dependency Injector loaded');
 
   await jobsLoader({ agenda });
   console.log('✌️ Jobs loaded');
 
-  await expressLoader({ app: expressApp });
+  await expressLoader({ app: expressApp }, fapp);
   console.log('✌️ Express loaded');
-}
-
+};
